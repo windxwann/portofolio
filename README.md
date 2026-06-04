@@ -15,7 +15,7 @@ Website portofolio bertema Pokemon yang modern, dibangun dengan Next.js, TypeScr
   - Riwayat Pendidikan
   - Galeri Proyek
   - Formulir Kontak
-
+    
 ### Panel Admin
 - **Autentikasi Aman** - Login admin berbasis JWT
 - **Operasi CRUD Lengkap:**
@@ -40,4 +40,3 @@ Website portofolio bertema Pokemon yang modern, dibangun dengan Next.js, TypeScr
 - **PostgreSQL**
 - **JWT Authentication**
 - **bcryptjs**
-- 

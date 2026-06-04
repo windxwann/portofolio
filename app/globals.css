@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+@theme {
+  --font-retro: var(--font-vt323), monospace;
+  --font-press: var(--font-press-start), monospace;
+
+  --color-pokedex-red: #cc0000;
+  --color-pokedex-red-dark: #8b0000;
+  --color-pokedex-red-light: #ff3333;
+  --color-pokedex-black: #1a1a1a;
+  --color-pokedex-dark: #2d2d2d;
+  --color-pokedex-gray: #4a4a4a;
+  --color-pokedex-light: #f5f5dc;
+  --color-pokedex-screen: #9bbc0f;
+  --color-pokedex-screen-dark: #0f380f;
+  --color-pokedex-blue: #0055a4;
+  --color-pokedex-yellow: #ffd700;
+  --color-hp-green: #44c74e;
+  --color-hp-yellow: #f0c000;
+  --color-hp-red: #e8000d;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-vt323), monospace;
+    background-color: #1a1a1a;
+    color: #f5f5dc;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+  }
+}
+
+@layer utilities {
+  .font-vt323 {
+    font-family: var(--font-vt323), monospace;
+  }
+  .font-press-start {
+    font-family: var(--font-press-start), monospace;
+  }
+
+  /* Manual Color Utilities Fallback */
+  .bg-pokedex-red { background-color: #cc0000; }
+  .bg-pokedex-red-dark { background-color: #8b0000; }
+  .bg-pokedex-red-light { background-color: #ff3333; }
+  .bg-pokedex-black { background-color: #1a1a1a; }
+  .bg-pokedex-dark { background-color: #2d2d2d; }
+  .bg-pokedex-gray { background-color: #4a4a4a; }
+  .bg-pokedex-light { background-color: #f5f5dc; }
+  .bg-pokedex-screen { background-color: #9bbc0f; }
+  .bg-pokedex-screen-dark { background-color: #0f380f; }
+  .bg-pokedex-blue { background-color: #0055a4; }
+  .bg-pokedex-yellow { background-color: #ffd700; }
+  .bg-pokedex { background-color: #1a1a1a; }
+
+  .text-pokedex-red { color: #cc0000; }
+  .text-pokedex-red-dark { color: #8b0000; }
+  .text-pokedex-red-light { color: #ff3333; }
+  .text-pokedex-black { color: #1a1a1a; }
+  .text-pokedex-dark { color: #2d2d2d; }
+  .text-pokedex-gray { color: #4a4a4a; }
+  .text-pokedex-light { color: #f5f5dc; }
+  .text-pokedex-screen { color: #9bbc0f; }
+  .text-pokedex-screen-dark { color: #0f380f; }
+  .text-pokedex-blue { color: #0055a4; }
+  .text-pokedex-yellow { color: #ffd700; }
+
+  .border-pokedex-red { border-color: #cc0000; }
+  .border-pokedex-red-dark { border-color: #8b0000; }
+  .border-pokedex-red-light { border-color: #ff3333; }
+  .border-pokedex-black { border-color: #1a1a1a; }
+  .border-pokedex-dark { border-color: #2d2d2d; }
+  .border-pokedex-gray { border-color: #4a4a4a; }
+  .border-pokedex-light { border-color: #f5f5dc; }
+  .border-pokedex-screen { border-color: #9bbc0f; }
+  .border-pokedex-screen-dark { border-color: #0f380f; }
+  .border-pokedex-blue { border-color: #0055a4; }
+  .border-pokedex-yellow { border-color: #ffd700; }
+
+  /* Pokedex retro border style */
+  .retro-border {
+    border: 3px solid #1a1a1a;
+    box-shadow: 4px 4px 0px #000000;
+  }
+  .retro-border-light {
+    border: 3px solid #1a1a1a;
+    box-shadow: 4px 4px 0px #000000;
+    background-color: #f5f5dc;
+    color: #1a1a1a;
+  }
+  .retro-border-red {
+    border: 3px solid #8b0000;
+    box-shadow: 4px 4px 0px #000000;
+    background-color: #cc0000;
+    color: #f5f5dc;
+  }
+  .retro-border-screen {
+    border: 4px solid #0f380f;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 4px 4px 0px #000;
+    background-color: #9bbc0f;
+    color: #0f380f;
+  }
+
+  /* Pokedex screen glow effect */
+  .screen-glow {
+    box-shadow: 0 0 15px rgba(155, 188, 15, 0.4), inset 0 0 10px rgba(0,0,0,0.3);
+  }
+
+  /* Retro button */
+  .retro-btn {
+    border: 3px solid #1a1a1a;
+    box-shadow: 4px 4px 0px #000000;
+    transition: all 0.1s ease;
+    cursor: pointer;
+    font-family: var(--font-vt323), monospace;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .retro-btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000000;
+  }
+  .retro-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px #000000;
+  }
+
+  /* HP Bar colors */
+  .hp-high { background-color: #44c74e; }
+  .hp-mid  { background-color: #f0c000; }
+  .hp-low  { background-color: #e8000d; }
+
+  /* Pokeball spinning decoration */
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .pokeball-spin {
+    animation: spin-slow 8s linear infinite;
+  }
+
+  /* Blink animation for cursor / active indicators */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+  .blink { animation: blink 1s step-end infinite; }
+
+  /* Scanlines overlay */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+  }
+}

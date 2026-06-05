@@ -17,6 +17,7 @@ export default function AdminProfile() {
     location: '',
     github: '',
     linkedin: '',
+    instagram: '',
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -203,6 +204,13 @@ export default function AdminProfile() {
                 value={profile.linkedin || ''} onChange={e => setProfile({ ...profile, linkedin: e.target.value })}
                 className={inputClass} />
             </div>
+          </div>
+
+          <div>
+            <label className={labelClass}>Instagram URL</label>
+            <input type="url" placeholder="https://instagram.com/user"
+              value={(profile as any).instagram || ''} onChange={e => setProfile({ ...profile, instagram: e.target.value } as any)}
+              className={inputClass} />
           </div>
 
           <div className="pt-2 border-t-2 border-pokedex-black">

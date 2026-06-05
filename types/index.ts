@@ -8,8 +8,9 @@ export interface Profile {
   email: string
   phone?: string
   location?: string
-  github?: string
-  linkedin?: string
+  github?: string | null
+  linkedin?: string | null
+  instagram?: string | null
 }
 
 export interface Skill {

@@ -5,6 +5,7 @@ import { Profile } from '@/types'
 import { Mail, MapPin, Phone, Download } from 'lucide-react'
 import { GithubIcon } from '@/components/GithubIcon'
 import { LinkedinIcon } from '@/components/LinkedinIcon'
+import { InstagramIcon } from '@/components/InstagramIcon'
 
 export default function Hero() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -83,7 +84,7 @@ export default function Hero() {
                   </div>
                 )}
                 {/* Social links */}
-                <div className="flex gap-3 pt-2">
+                <div className="flex flex-wrap gap-2 pt-2">
                   {profile?.github && (
                     <a href={profile.github} target="_blank" rel="noopener noreferrer"
                       className="retro-btn bg-pokedex-dark text-white px-3 py-1.5 flex items-center gap-2 text-base">
@@ -96,8 +97,15 @@ export default function Hero() {
                       <LinkedinIcon size={18} /> LINKEDIN
                     </a>
                   )}
+                  {profile?.instagram && (
+                    <a href={profile.instagram} target="_blank" rel="noopener noreferrer"
+                      className="retro-btn px-3 py-1.5 flex items-center gap-2 text-base text-white"
+                      style={{ background: 'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', border: '3px solid black', boxShadow: '3px 3px 0 #000' }}>
+                      <InstagramIcon size={18} /> INSTAGRAM
+                    </a>
+                  )}
                   <a href="/cv.pdf" download
-                    className="retro-btn bg-pokedex-yellow text-pokedex-black px-3 py-1.5 flex items-center gap-2 text-base">
+                    className="retro-btn bg-pokedex-yellow text-pokedex-black px-3 py-1.5 flex items-center gap-2 text-base ml-auto">
                     <Download size={18} /> CV
                   </a>
                 </div>

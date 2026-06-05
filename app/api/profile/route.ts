@@ -13,13 +13,34 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
+
+    const {
+      id,
+      name, title, bio, description, avatar,
+      email, phone, location,
+      github, linkedin, instagram,
+    } = body
+
+    const data = {
+      name, title, bio,
+      description: description ?? null,
+      avatar: avatar ?? null,
+      email,
+      phone: phone ?? null,
+      location: location ?? null,
+      github: github ?? null,
+      linkedin: linkedin ?? null,
+      instagram: instagram ?? null,
+    }
+
     const profile = await prisma.profile.upsert({
-      where: { id: body.id || 1 },
-      update: body,
-      create: body,
+      where: { id: id || 1 },
+      update: data,
+      create: data,
     })
     return NextResponse.json(profile)
   } catch (error) {
+    console.error('Profile update error:', error)
     return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
   }
 }

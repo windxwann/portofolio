@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
+import { Profile } from '@/types'
 
 function Pokeball({ className }: { className?: string }) {
   return (
@@ -18,6 +19,14 @@ function Pokeball({ className }: { className?: string }) {
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState('')
+  const [profile, setProfile] = useState<Profile | null>(null)
+
+  useEffect(() => {
+    fetch('/api/profile')
+      .then(res => res.json())
+      .then(data => setProfile(data))
+      .catch(() => {})
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,25 +65,32 @@ export default function Contact() {
               <div className="bg-pokedex-black rounded-xl p-5 retro-border">
                 <p className="font-press-start text-pokedex-yellow text-[9px] tracking-widest mb-4">SIGNAL DETECTED:</p>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-pokedex-red rounded p-1.5 border-2 border-black">
-                      <Mail size={16} className="text-white" />
+                  {profile?.email && (
+                    <div className="flex items-center gap-3">
+                      <div className="bg-pokedex-red rounded p-1.5 border-2 border-black">
+                        <Mail size={16} className="text-white" />
+                      </div>
+                      <span className="font-vt323 text-pokedex-light text-xl">{profile.email}</span>
                     </div>
-                    <span className="font-vt323 text-pokedex-light text-xl">your.email@example.com</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-pokedex-blue rounded p-1.5 border-2 border-black">
-                      <Phone size={16} className="text-white" />
+                  )}
+                  {profile?.phone && (
+                    <div className="flex items-center gap-3">
+                      <div className="bg-pokedex-blue rounded p-1.5 border-2 border-black">
+                        <Phone size={16} className="text-white" />
+                      </div>
+                      <span className="font-vt323 text-pokedex-light text-xl">{profile.phone}</span>
                     </div>
-                    <span className="font-vt323 text-pokedex-light text-xl">+62 123 4567 890</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-green-700 rounded p-1.5 border-2 border-black">
-                      <MapPin size={16} className="text-white" />
+                  )}
+                  {profile?.location && (
+                    <div className="flex items-center gap-3">
+                      <div className="bg-green-700 rounded p-1.5 border-2 border-black">
+                        <MapPin size={16} className="text-white" />
+                      </div>
+                      <span className="font-vt323 text-pokedex-light text-xl">{profile.location}</span>
                     </div>
-                    <span className="font-vt323 text-pokedex-light text-xl">Jakarta, Indonesia</span>
-                  </div>
+                  )}
                 </div>
+
               </div>
 
               {/* Pokeball decoration */}
@@ -82,9 +98,9 @@ export default function Contact() {
                 <Pokeball className="w-28 h-28 pokeball-spin opacity-70" />
               </div>
 
-              <div className="bg-pokedex-screen-dark rounded-lg p-4 border-4 border-black retro-border-screen relative scanlines">
-                <p className="font-press-start text-pokedex-screen text-[9px] mb-2">SYSTEM MSG:</p>
-                <p className="font-vt323 text-pokedex-screen text-xl leading-relaxed">
+              <div className="bg-pokedex-screen-dark rounded-lg p-4 retro-border-screen relative scanlines">
+                <p className="font-press-start text-pokedex-screen-dark text-[9px] mb-2 font-bold">SYSTEM MSG:</p>
+                <p className="font-vt323 text-pokedex-screen-dark text-xl leading-relaxed">
                   A wild developer has appeared! Use this form to start a battle... or a collaboration. Your choice, trainer.
                 </p>
               </div>

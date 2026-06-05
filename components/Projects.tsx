@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { Project } from '@/types'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Info } from 'lucide-react'
 import { GithubIcon } from '@/components/GithubIcon'
 import Image from 'next/image'
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   useEffect(() => { fetchProjects() }, [])
 
@@ -111,6 +112,13 @@ export default function Projects() {
 
                     {/* Action buttons */}
                     <div className="flex gap-2">
+                      <button
+                        onClick={() => setSelectedProject(project)}
+                        className="retro-btn bg-pokedex-blue text-white flex-1 px-2 py-1.5 flex items-center justify-center gap-1.5 text-sm"
+                      >
+                        <Info size={13} />
+                        INFO
+                      </button>
                       {project.demoUrl && (
                         <a
                           href={project.demoUrl}
@@ -141,6 +149,97 @@ export default function Projects() {
           )}
         </div>
       </div>
+
+      {/* Detail Modal */}
+      {selectedProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-pokedex-light rounded-2xl border-4 border-black shadow-[8px_8px_0_#000] w-full max-w-4xl max-h-[90vh] overflow-y-auto retro-border-light relative">
+            {/* Modal Header */}
+            <div className="bg-pokedex-red-dark px-4 py-3 border-b-4 border-black flex items-center gap-3 sticky top-0 z-10">
+              <div className="w-3 h-3 rounded-full bg-yellow-400 border-2 border-black blink" />
+              <span className="font-press-start text-white text-[10px] sm:text-xs tracking-widest truncate">
+                DATA: {selectedProject.title.toUpperCase()}
+              </span>
+              <button 
+                onClick={() => setSelectedProject(null)}
+                className="ml-auto bg-pokedex-black text-white w-8 h-8 flex items-center justify-center border-2 border-black retro-btn text-xs font-press-start"
+              >
+                X
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-4 sm:p-6 lg:p-8 flex flex-col md:flex-row gap-6">
+              {/* Left: Image */}
+              <div className="w-full md:w-1/2 flex-shrink-0">
+                <div className="bg-pokedex-screen-dark border-4 border-black p-2 rounded-lg retro-border-screen scanlines relative h-56 sm:h-72">
+                  {selectedProject.image ? (
+                    <Image
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      fill
+                      className="object-cover border-2 border-pokedex-screen-dark opacity-90"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <span className="font-press-start text-pokedex-screen text-4xl opacity-40">?</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Info */}
+              <div className="w-full md:w-1/2 flex flex-col gap-4">
+                <div className="bg-white p-4 border-3 border-black retro-border">
+                  <h2 className="font-press-start text-pokedex-black text-sm sm:text-base mb-3 leading-snug">
+                    {selectedProject.title}
+                  </h2>
+                  <p className="font-vt323 text-pokedex-gray text-xl leading-relaxed whitespace-pre-wrap">
+                    {selectedProject.description}
+                  </p>
+                </div>
+
+                <div className="bg-pokedex-black p-4 border-3 border-black retro-border">
+                  <p className="font-press-start text-pokedex-yellow text-[9px] mb-3 tracking-widest">TECHNOLOGIES:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="font-press-start text-[9px] bg-pokedex-dark text-white border-2 border-black px-2 py-1"
+                      >
+                        {tech.toUpperCase()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-auto pt-4">
+                  {selectedProject.demoUrl && (
+                    <a
+                      href={selectedProject.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="retro-btn bg-pokedex-red text-white flex-1 py-3 flex items-center justify-center gap-2 text-sm"
+                    >
+                      <ExternalLink size={16} /> DEMO
+                    </a>
+                  )}
+                  {selectedProject.githubUrl && (
+                    <a
+                      href={selectedProject.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="retro-btn bg-pokedex-dark text-white flex-1 py-3 flex items-center justify-center gap-2 text-sm"
+                    >
+                      <GithubIcon size={16} /> CODE
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

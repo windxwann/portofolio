@@ -3,9 +3,14 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Hide navbar on admin pages — admin has its own sidebar layout
+  if (pathname.startsWith('/admin')) return null
 
   const navItems = [
     { name: 'HOME', href: '#home' },

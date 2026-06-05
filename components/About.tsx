@@ -6,19 +6,29 @@ import { Code, Coffee, Rocket, Heart } from "lucide-react";
 
 export default function About() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [stats, setStats] = useState([
+    { icon: Code, label: "PROJECTS", value: "..." },
+    { icon: Coffee, label: "COFFEE", value: "∞" },
+    { icon: Rocket, label: "EXP YEARS", value: "..." },
+    { icon: Heart, label: "CLIENTS", value: "..." },
+  ]);
 
   useEffect(() => {
     fetch("/api/profile")
       .then((res) => res.json())
       .then((data) => setProfile(data));
-  }, []);
 
-  const stats = [
-    { icon: Code, label: "PROJECTS", value: "15+" },
-    { icon: Coffee, label: "COFFEE", value: "∞" },
-    { icon: Rocket, label: "EXP YEARS", value: "3+" },
-    { icon: Heart, label: "CLIENTS", value: "10+" },
-  ];
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        setStats([
+          { icon: Code, label: "PROJECTS", value: data.projects },
+          { icon: Coffee, label: "COFFEE", value: data.coffee },
+          { icon: Rocket, label: "EXP YEARS", value: data.expYears },
+          { icon: Heart, label: "CLIENTS", value: data.clients },
+        ]);
+      });
+  }, []);
 
   return (
     <section id="about" className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">

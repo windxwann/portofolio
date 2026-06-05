@@ -18,11 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${vt323.variable} ${pressStart.variable} font-vt323`}>
+      <body className={`${vt323.variable} ${pressStart.variable} font-vt323 bg-pokedex-black`}>
+        {/* Navbar hides itself on /admin routes */}
         <Navbar />
-        <main className="min-h-screen bg-pokedex">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   )

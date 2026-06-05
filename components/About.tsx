@@ -45,14 +45,14 @@ export default function About() {
             <div className="bg-pokedex-screen-dark rounded-lg p-5 border-4 border-black shadow-[inset_0_0_10px_rgba(0,0,0,0.5),4px_4px_0_#000] relative scanlines">
               <p className="font-press-start text-[9px] text-pokedex-screen opacity-60 mb-3 tracking-widest">WHO AM I?</p>
               <p className="font-vt323 text-pokedex-screen text-xl leading-loose">
-                I&apos;m a passionate full-stack developer with a love for creating
-                beautiful and functional web applications. My journey in programming
-                started several years ago and I&apos;ve been leveling up ever since.
+                {profile?.description ??
+                  "I'm a passionate full-stack developer with a love for creating beautiful and functional web applications. My journey in programming started several years ago and I've been leveling up ever since."}
               </p>
-              <p className="font-vt323 text-pokedex-screen text-xl leading-loose mt-3">
-                {profile?.bio ??
-                  "I believe in writing clean, maintainable code and crafting user experiences that leave a lasting impression."}
-              </p>
+              {profile?.bio && (
+                <p className="font-vt323 text-pokedex-screen text-xl leading-loose mt-3">
+                  {profile.bio}
+                </p>
+              )}
             </div>
           </div>
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Skill } from '@/types'
-import { Code, Database, Server, Wrench } from 'lucide-react'
+import { Code, Database, Server, Wrench, FileType, Type, Braces, Terminal, Globe, Cpu } from 'lucide-react'
 import { FigmaIcon } from '@/components/FigmaIcon'
 
 const categoryIcons: Record<string, any> = {
@@ -11,6 +11,20 @@ const categoryIcons: Record<string, any> = {
   database: Database,
   tools: Wrench,
   design: FigmaIcon,
+}
+
+const skillIcons: Record<string, any> = {
+  'html': FileType,
+  'css': Type,
+  'javascript': Braces,
+  'typescript': Code,
+  'react': Globe,
+  'next.js': Globe,
+  'node.js': Server,
+  'postgresql': Database,
+  'prisma': Database,
+  'git': Terminal,
+  'docker': Cpu,
 }
 
 const categoryColors: Record<string, string> = {
@@ -104,17 +118,23 @@ export default function Skills() {
                     </div>
 
                     <div className="p-4 space-y-4">
-                      {categorySkills.map((skill) => (
-                        <div key={skill.id}>
-                          <div className="flex justify-between mb-1.5">
-                            <span className="font-vt323 text-pokedex-light text-xl">{skill.name}</span>
-                            <span className="font-press-start text-[9px] text-pokedex-gray mt-1">
-                              LV.{Math.round(skill.level / 10)}
-                            </span>
+                      {categorySkills.map((skill) => {
+                        const SkillIcon = skillIcons[skill.name.toLowerCase()] || Code
+                        return (
+                          <div key={skill.id}>
+                            <div className="flex justify-between mb-1.5 items-center">
+                              <div className='flex items-center gap-2'>
+                                <SkillIcon size={16} className='text-pokedex-light'/>
+                                <span className="font-vt323 text-pokedex-light text-xl">{skill.name}</span>
+                              </div>
+                              <span className="font-press-start text-[9px] text-pokedex-gray mt-1">
+                                LV.{Math.round(skill.level / 10)}
+                              </span>
+                            </div>
+                            <HpBar level={skill.level} />
                           </div>
-                          <HpBar level={skill.level} />
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 )

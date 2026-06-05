@@ -1,13 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Project } from '@/types'
 import ImageUpload from '@/components/admin/ImageUpload'
 
-export default function AddProject() {
+export default function EditProject({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
+  const { id } = use(params)
   const [formData, setFormData] = useState({
+    id: 0,
     title: '',
     description: '',
     technologies: '',
@@ -16,22 +19,51 @@ export default function AddProject() {
     image: '',
     featured: false,
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then((data: Project[]) => {
+        const found = data.find(p => p.id === parseInt(id))
+        if (found) {
+          setFormData({
+            id: found.id,
+            title: found.title,
+            description: found.description,
+            technologies: found.technologies.join(', '),
+            demoUrl: found.demoUrl || '',
+            githubUrl: found.githubUrl || '',
+            image: found.image || '',
+            featured: found.featured,
+          })
+        }
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setSaving(true)
     setError('')
 
     const data = {
-      ...formData,
+      id: formData.id,
+      title: formData.title,
+      description: formData.description,
       technologies: formData.technologies.split(',').map(t => t.trim()).filter(Boolean),
+      demoUrl: formData.demoUrl || null,
+      githubUrl: formData.githubUrl || null,
+      image: formData.image || null,
+      featured: formData.featured,
     }
 
     try {
       const res = await fetch('/api/projects', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
@@ -40,19 +72,39 @@ export default function AddProject() {
         router.push('/admin/projects')
       } else {
         const d = await res.json()
-        setError(d.error || 'Failed to save project.')
+        setError(d.error || 'Failed to update project.')
       }
     } catch {
       setError('Connection error. Please try again.')
     } finally {
-      setLoading(false)
+      setSaving(false)
     }
   }
 
   const inputClass =
     'w-full bg-pokedex-black border-2 border-pokedex-gray text-pokedex-screen font-vt323 text-xl px-4 py-2 rounded focus:outline-none focus:border-pokedex-screen placeholder:text-pokedex-gray placeholder:opacity-50 transition-colors'
 
-  const labelClass = 'block font-press-start text-[9px] text-pokedex-light mb-2 tracking-widest uppercase'
+  const labelClass =
+    'block font-press-start text-[9px] text-pokedex-light mb-2 tracking-widest uppercase'
+
+  if (loading) {
+    return (
+      <div className="bg-pokedex-screen-dark border-4 border-black rounded-xl shadow-[4px_4px_0_#000] p-8 text-center scanlines">
+        <span className="font-press-start text-pokedex-screen text-xs blink">▶ LOADING PROJECT DATA...</span>
+      </div>
+    )
+  }
+
+  if (!formData.title && !loading) {
+    return (
+      <div className="bg-pokedex-dark border-4 border-black rounded-xl shadow-[4px_4px_0_#000] p-10 text-center">
+        <p className="font-press-start text-pokedex-red text-xs mb-3">PROJECT NOT FOUND</p>
+        <Link href="/admin/projects" className="retro-btn bg-pokedex-dark text-pokedex-gray border-pokedex-gray px-5 py-2 font-press-start text-[9px]">
+          ◄ BACK TO PROJECTS
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-5">
@@ -60,10 +112,10 @@ export default function AddProject() {
       <div className="bg-pokedex-dark rounded-xl border-4 border-black shadow-[4px_4px_0_#000] overflow-hidden">
         <div className="flex items-center gap-4 px-5 py-3 bg-pokedex-red border-b-4 border-black">
           <div className="w-2 h-2 rounded-full bg-pokedex-yellow blink" />
-          <span className="font-press-start text-white text-[10px] tracking-widest">NEW PROJECT ENTRY</span>
+          <span className="font-press-start text-white text-[10px] tracking-widest">EDIT PROJECT ENTRY</span>
         </div>
         <div className="px-5 py-3 flex items-center justify-between">
-          <p className="font-vt323 text-pokedex-light text-xl opacity-70">Fill in the project details below</p>
+          <p className="font-vt323 text-pokedex-light text-xl opacity-70">Modify project details</p>
           <Link
             href="/admin/projects"
             className="font-press-start text-[8px] text-pokedex-gray hover:text-pokedex-light tracking-widest transition-colors"
@@ -197,10 +249,10 @@ export default function AddProject() {
           <div className="flex gap-3 pt-2 border-t-2 border-pokedex-black">
             <button
               type="submit"
-              disabled={loading}
+              disabled={saving}
               className="retro-btn bg-pokedex-screen-dark text-pokedex-screen border-pokedex-screen px-6 py-2 font-press-start text-[9px] tracking-widest disabled:opacity-50 disabled:cursor-not-allowed flex-1"
             >
-              {loading ? '▶ SAVING...' : '► SAVE PROJECT'}
+              {saving ? '▶ SAVING...' : '► SAVE CHANGES'}
             </button>
             <button
               type="button"

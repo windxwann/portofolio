@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { Profile } from '@/types'
-import { Save, User } from 'lucide-react'
+import { Save } from 'lucide-react'
+import ImageUpload from '@/components/admin/ImageUpload'
 
 export default function AdminProfile() {
   const [profile, setProfile] = useState<Partial<Profile>>({
     name: '',
     title: '',
     bio: '',
+    description: '',
     avatar: '',
     email: '',
     phone: '',
@@ -145,16 +147,25 @@ export default function AdminProfile() {
 
           <div>
             <label className={labelClass}>Bio / Pokédex Data *</label>
-            <textarea required rows={4} placeholder="Tell the world about yourself..."
+            <textarea required rows={3} placeholder="Short bio shown on trainer card..."
               value={profile.bio || ''} onChange={e => setProfile({ ...profile, bio: e.target.value })}
               className={`${inputClass} resize-none`} />
           </div>
 
           <div>
-            <label className={labelClass}>Avatar URL</label>
-            <input type="url" placeholder="https://example.com/avatar.jpg"
-              value={profile.avatar || ''} onChange={e => setProfile({ ...profile, avatar: e.target.value })}
-              className={inputClass} />
+            <label className={labelClass}>Description / Who Am I?</label>
+            <textarea rows={4} placeholder="Ceritakan lebih lanjut tentang dirimu di bagian About..."
+              value={profile.description || ''} onChange={e => setProfile({ ...profile, description: e.target.value })}
+              className={`${inputClass} resize-none`} />
+            <p className="font-vt323 text-pokedex-gray text-base mt-1 opacity-70">Tampil di bagian WHO AM I? pada halaman About</p>
+          </div>
+
+          <div>
+            <ImageUpload
+              label="Avatar Image"
+              currentImage={profile.avatar}
+              onUpload={(base64) => setProfile({ ...profile, avatar: base64 })}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

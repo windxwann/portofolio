@@ -3,6 +3,7 @@ export interface Profile {
   name: string
   title: string
   bio: string
+  description?: string
   avatar?: string
   email: string
   phone?: string

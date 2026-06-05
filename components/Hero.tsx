@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Profile } from '@/types'
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail, MapPin, Phone, Download } from 'lucide-react'
 import { GithubIcon } from '@/components/GithubIcon'
 import { LinkedinIcon } from '@/components/LinkedinIcon'
 
@@ -96,6 +96,10 @@ export default function Hero() {
                       <LinkedinIcon size={18} /> LINKEDIN
                     </a>
                   )}
+                  <a href="/cv.pdf" download
+                    className="retro-btn bg-pokedex-yellow text-pokedex-black px-3 py-1.5 flex items-center gap-2 text-base">
+                    <Download size={18} /> CV
+                  </a>
                 </div>
               </div>
             </div>
@@ -113,8 +117,8 @@ export default function Hero() {
 
               {/* Bio / Pokedex description */}
               <div className="bg-pokedex-screen-dark rounded-lg p-4 retro-border-screen flex-1 relative overflow-hidden scanlines">
-                <p className="font-press-start text-[10px] text-pokedex-screen opacity-70 mb-2 tracking-widest">POKEDEX DATA:</p>
-                <p className="font-vt323 text-pokedex-screen text-xl leading-relaxed">
+                <p className="font-press-start text-[10px] text-pokedex-screen-dark opacity-80 mb-2 tracking-widest">POKEDEX DATA:</p>
+                <p className="font-vt323 text-pokedex-screen-dark text-xl leading-relaxed">
                   {profile?.bio ?? 'A passionate developer who builds beautiful and functional web applications. Strong in both frontend and backend technologies. Currently searching for new adventures.'}
                 </p>
               </div>

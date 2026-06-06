@@ -63,7 +63,7 @@ export default function Skills() {
     try {
       const res = await fetch('/api/skills')
       const data = await res.json()
-      setSkills(data)
+      setSkills(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching skills:', error)
     } finally {
@@ -71,7 +71,7 @@ export default function Skills() {
     }
   }
 
-  const groupedSkills = skills.reduce((acc, skill) => {
+  const groupedSkills = (Array.isArray(skills) ? skills : []).reduce((acc, skill) => {
     if (!acc[skill.category]) acc[skill.category] = []
     acc[skill.category].push(skill)
     return acc

@@ -32,7 +32,7 @@ export default function SkillsManagement() {
     try {
       const res = await fetch('/api/skills')
       const data = await res.json()
-      setSkills(data)
+      setSkills(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching skills:', error)
     } finally {
@@ -51,11 +51,11 @@ export default function SkillsManagement() {
   }
 
   // Group by category
-  const grouped = skills.reduce((acc, skill) => {
+  const grouped = Array.isArray(skills) ? skills.reduce((acc, skill) => {
     if (!acc[skill.category]) acc[skill.category] = []
     acc[skill.category].push(skill)
     return acc
-  }, {} as Record<string, Skill[]>)
+  }, {} as Record<string, Skill[]>) : {}
 
   const hpColor = (level: number) =>
     level >= 60 ? 'hp-high' : level >= 30 ? 'hp-mid' : 'hp-low'

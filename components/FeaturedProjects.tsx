@@ -20,7 +20,8 @@ export default function FeaturedProjects() {
       const res = await fetch('/api/projects')
       const data = await res.json()
       // Filter hanya project yang featured
-      const featuredProjects = data.filter((project: Project) => project.featured === true)
+      const allProjects = Array.isArray(data) ? data : []
+      const featuredProjects = allProjects.filter((project: Project) => project.featured === true)
       setProjects(featuredProjects.slice(0, 3)) // Ambil maksimal 3 project
     } catch (error) {
       console.error('Error fetching projects:', error)

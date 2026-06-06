@@ -17,8 +17,9 @@ export default function Education() {
         fetch('/api/education'),
         fetch('/api/experiences')
       ])
-      setEducation(await eduRes.json())
-      setExperiences(await expRes.json())
+      const [eduData, expData] = await Promise.all([eduRes.json(), expRes.json()])
+      setEducation(Array.isArray(eduData) ? eduData : [])
+      setExperiences(Array.isArray(expData) ? expData : [])
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {

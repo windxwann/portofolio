@@ -17,7 +17,7 @@ export default function ProjectsManagement() {
     try {
       const res = await fetch('/api/projects')
       const data = await res.json()
-      setProjects(data)
+      setProjects(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching projects:', error)
     } finally {

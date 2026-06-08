@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${vt323.variable} ${pressStart.variable} font-vt323 bg-pokedex-black`}>
         {/* Navbar hides itself on /admin routes */}
         <Navbar />

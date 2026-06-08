@@ -17,6 +17,7 @@ model Profile {
   location    String?
   github      String?
   linkedin    String?
+  instagram   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   description String?

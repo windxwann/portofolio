@@ -7,8 +7,6 @@ export async function POST(request: Request) {
         const { email: rawEmail, password } = await request.json()
         const email = rawEmail?.trim()
 
-        console.log('Login attempt for:', email)
-
         // Find user
         const user = await prisma.user.findUnique({
             where: { email },
@@ -49,7 +47,7 @@ export async function POST(request: Request) {
         response.cookies.set('admin-token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60, // 7 days
             path: '/',
         })

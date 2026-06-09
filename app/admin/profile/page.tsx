@@ -23,6 +23,11 @@ export default function AdminProfile() {
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  
+  const [password, setPassword] = useState('')
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
+  const [passwordError, setPasswordError] = useState('')
+  const [changingPassword, setChangingPassword] = useState(false)
 
   useEffect(() => { fetchProfile() }, [])
 
@@ -62,6 +67,34 @@ export default function AdminProfile() {
       setError('Connection error. Please try again.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setChangingPassword(true)
+    setPasswordError('')
+    setPasswordSuccess(false)
+
+    try {
+      const res = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPassword: password }),
+      })
+
+      if (res.ok) {
+        setPasswordSuccess(true)
+        setPassword('')
+        setTimeout(() => setPasswordSuccess(false), 3000)
+      } else {
+        const d = await res.json()
+        setPasswordError(d.error || 'Failed to update password.')
+      }
+    } catch {
+      setPasswordError('Connection error. Please try again.')
+    } finally {
+      setChangingPassword(false)
     }
   }
 
@@ -223,6 +256,22 @@ export default function AdminProfile() {
               {saving ? '▶ SAVING TRAINER DATA...' : '► SAVE TRAINER CARD'}
             </button>
           </div>
+        </form>
+
+        <form onSubmit={handlePasswordSubmit} className="p-5 border-t-4 border-black space-y-4 bg-pokedex-dark">
+          <label className="block font-press-start text-[9px] text-pokedex-light mb-2 tracking-widest uppercase">New Password</label>
+          <input type="password" required placeholder="********"
+            value={password} onChange={e => setPassword(e.target.value)}
+            className={inputClass} />
+          {passwordSuccess && <p className="font-press-start text-[9px] text-pokedex-screen">✓ PASSWORD UPDATED</p>}
+          {passwordError && <p className="font-press-start text-[9px] text-red-400">✕ {passwordError}</p>}
+          <button
+            type="submit"
+            disabled={changingPassword}
+            className="retro-btn bg-pokedex-red-dark text-white border-black w-full py-2.5 font-press-start text-[9px] tracking-widest disabled:opacity-50"
+          >
+            {changingPassword ? '▶ UPDATING...' : '► CHANGE PASSWORD'}
+          </button>
         </form>
       </div>
     </div>

@@ -13,7 +13,6 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
-
     const {
       id,
       name, title, bio, description, avatar,
@@ -21,6 +20,7 @@ export async function PUT(request: Request) {
       github, linkedin, instagram,
     } = body
 
+    // 1. Update Profile model
     const data = {
       name, title, bio,
       description: description ?? null,
@@ -38,6 +38,17 @@ export async function PUT(request: Request) {
       update: data,
       create: data,
     })
+
+    // 2. Update User model (assuming admin is the user with email)
+    // First, find the user to update
+    const user = await prisma.user.findFirst({ where: { role: 'admin' } })
+    if (user) {
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { email: email, name: name }
+        })
+    }
+
     return NextResponse.json(profile)
   } catch (error) {
     console.error('Profile update error:', error)

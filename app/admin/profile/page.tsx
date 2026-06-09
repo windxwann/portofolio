@@ -24,10 +24,12 @@ export default function AdminProfile() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
   
+  // Account state
+  const [accountEmail, setAccountEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [passwordSuccess, setPasswordSuccess] = useState(false)
-  const [passwordError, setPasswordError] = useState('')
-  const [changingPassword, setChangingPassword] = useState(false)
+  const [accountSuccess, setAccountSuccess] = useState('')
+  const [accountError, setAccountError] = useState('')
+  const [updatingAccount, setUpdatingAccount] = useState(false)
 
   useEffect(() => { fetchProfile() }, [])
 
@@ -35,7 +37,10 @@ export default function AdminProfile() {
     try {
       const res = await fetch('/api/profile')
       const data = await res.json()
-      if (data) setProfile(data)
+      if (data) {
+        setProfile(data)
+        setAccountEmail(data.email)
+      }
     } catch (err) {
       console.error('Error fetching profile:', err)
     } finally {
@@ -70,31 +75,34 @@ export default function AdminProfile() {
     }
   }
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
+  const handleAccountSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setChangingPassword(true)
-    setPasswordError('')
-    setPasswordSuccess(false)
+    setUpdatingAccount(true)
+    setAccountError('')
+    setAccountSuccess('')
 
     try {
-      const res = await fetch('/api/admin/change-password', {
+      // Update Email
+      const res = await fetch('/api/admin/change-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newPassword: password }),
+        body: JSON.stringify({ email: accountEmail, newPassword: password || undefined }),
       })
 
       if (res.ok) {
-        setPasswordSuccess(true)
+        setAccountSuccess('ACCOUNT UPDATED')
         setPassword('')
-        setTimeout(() => setPasswordSuccess(false), 3000)
+        setTimeout(() => setAccountSuccess(''), 3000)
+        // Refresh to get new email
+        fetchProfile()
       } else {
         const d = await res.json()
-        setPasswordError(d.error || 'Failed to update password.')
+        setAccountError(d.error || 'Failed to update account.')
       }
     } catch {
-      setPasswordError('Connection error. Please try again.')
+      setAccountError('Connection error. Please try again.')
     } finally {
-      setChangingPassword(false)
+      setUpdatingAccount(false)
     }
   }
 
@@ -122,22 +130,22 @@ export default function AdminProfile() {
         </div>
         <div className="px-5 py-3">
           <p className="font-vt323 text-pokedex-light text-xl opacity-70">
-            Edit your public profile information
+            Edit your public profile information & account
           </p>
         </div>
       </div>
 
       {/* Feedback */}
-      {success && (
+      {(success || accountSuccess) && (
         <div className="px-4 py-2 bg-pokedex-screen-dark border-2 border-pokedex-screen rounded shadow-[2px_2px_0_#000]">
           <p className="font-press-start text-[9px] text-pokedex-screen tracking-wider">
-            ✓ PROFILE SAVED SUCCESSFULLY
+            ✓ {success ? 'PROFILE SAVED' : accountSuccess}
           </p>
         </div>
       )}
-      {error && (
+      {(error || accountError) && (
         <div className="px-4 py-2 bg-pokedex-black border-2 border-pokedex-red rounded shadow-[2px_2px_0_#000]">
-          <p className="font-press-start text-[9px] text-red-400 tracking-wider">✕ {error}</p>
+          <p className="font-press-start text-[9px] text-red-400 tracking-wider">✕ {error || accountError}</p>
         </div>
       )}
 
@@ -204,24 +212,17 @@ export default function AdminProfile() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className={labelClass}>Email *</label>
-              <input type="email" required placeholder="trainer@pokecenter.com"
-                value={profile.email || ''} onChange={e => setProfile({ ...profile, email: e.target.value })}
-                className={inputClass} />
-            </div>
-            <div>
               <label className={labelClass}>Phone</label>
               <input type="tel" placeholder="+1 234 567 8900"
                 value={profile.phone || ''} onChange={e => setProfile({ ...profile, phone: e.target.value })}
                 className={inputClass} />
             </div>
-          </div>
-
-          <div>
-            <label className={labelClass}>Location</label>
-            <input type="text" placeholder="Pallet Town, Kanto"
-              value={profile.location || ''} onChange={e => setProfile({ ...profile, location: e.target.value })}
-              className={inputClass} />
+            <div>
+              <label className={labelClass}>Location</label>
+              <input type="text" placeholder="Pallet Town, Kanto"
+                value={profile.location || ''} onChange={e => setProfile({ ...profile, location: e.target.value })}
+                className={inputClass} />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -258,19 +259,29 @@ export default function AdminProfile() {
           </div>
         </form>
 
-        <form onSubmit={handlePasswordSubmit} className="p-5 border-t-4 border-black space-y-4 bg-pokedex-dark">
-          <label className="block font-press-start text-[9px] text-pokedex-light mb-2 tracking-widest uppercase">New Password</label>
-          <input type="password" required placeholder="********"
+        {/* Account Section */}
+        <form onSubmit={handleAccountSubmit} className="p-5 border-t-4 border-black space-y-4 bg-pokedex-dark">
+          <div className="px-5 py-3 bg-pokedex-red-dark border-b-4 border-black -m-5 mb-5 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-pokedex-yellow blink" />
+            <span className="font-press-start text-pokedex-light text-[9px] tracking-widest">ACCOUNT SETTINGS</span>
+          </div>
+          
+          <label className={labelClass}>Login Email</label>
+          <input type="email" required placeholder="trainer@pokecenter.com"
+            value={accountEmail} onChange={e => setAccountEmail(e.target.value)}
+            className={inputClass} />
+
+          <label className={labelClass}>New Password (Optional)</label>
+          <input type="password" placeholder="********"
             value={password} onChange={e => setPassword(e.target.value)}
             className={inputClass} />
-          {passwordSuccess && <p className="font-press-start text-[9px] text-pokedex-screen">✓ PASSWORD UPDATED</p>}
-          {passwordError && <p className="font-press-start text-[9px] text-red-400">✕ {passwordError}</p>}
+          
           <button
             type="submit"
-            disabled={changingPassword}
+            disabled={updatingAccount}
             className="retro-btn bg-pokedex-red-dark text-white border-black w-full py-2.5 font-press-start text-[9px] tracking-widest disabled:opacity-50"
           >
-            {changingPassword ? '▶ UPDATING...' : '► CHANGE PASSWORD'}
+            {updatingAccount ? '▶ UPDATING...' : '► UPDATE ACCOUNT'}
           </button>
         </form>
       </div>
